@@ -1,0 +1,5 @@
+.env
+
+fuseki-data/
+
+node_modules/
