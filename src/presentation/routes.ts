@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { TemperatureRoutes } from "./temperature/routes";
+import { TemperatureRoutes } from "./out/temperature/routes";
 
 export class AppRoutes {
   static get routes(): Router {
