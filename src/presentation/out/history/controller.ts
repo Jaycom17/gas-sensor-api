@@ -30,4 +30,21 @@ export class HistoryController {
         this.handleError(error, res);
       });
   }
+
+  querySparql(req: Request, res: Response) {
+    const historyDatasourceImpl = new HistoryDatasourceImpl(
+      `${envs.databaseUrl}${envs.databaseName}`,
+      envs.databaseUser,
+      envs.databasePassword
+    );
+
+    historyDatasourceImpl
+      .querySparql(req.body.query)
+      .then((response) => {
+        res.json(response);
+      })
+      .catch((error) => {
+        this.handleError(error, res);
+      });
+  }
 }

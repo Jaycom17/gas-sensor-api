@@ -87,4 +87,32 @@ export class HistoryDatasourceImpl extends HistoryDatasource {
       throw CustumError.internal();
     }
   }
+
+  async querySparql(query: string): Promise<any> {
+    const url = `${this.dataUrl}/sparql`;
+
+    try {
+      const response = await axios.post(url, null, {
+        params: {
+          query,
+        },
+        headers: {
+          Accept: "application/sparql-results+json",
+        },
+        auth: {
+          username: this.username,
+          password: this.password,
+        },
+      });
+
+      return response.data;
+    } catch (error: Error | any) {
+      console.error(
+        "Error querying data:",
+        error.response?.data || error.message
+      );
+      throw CustumError.internal();
+    }
+  }
+
 }
