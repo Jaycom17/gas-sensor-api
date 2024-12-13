@@ -11,4 +11,5 @@ export const envs = {
     thresholdsUrl: get('THRESHOLDS_URL').required().asUrlString(),
     resendKey: get('RESEND_KEY').required().asString(),
     audienceId: get('AUDIENCE_ID').required().asString(),
+    telegramToken: get('TELEGRAM_BOT_TOKEN').required().asString(),
 };

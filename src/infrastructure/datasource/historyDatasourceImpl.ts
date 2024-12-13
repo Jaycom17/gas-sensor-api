@@ -7,6 +7,9 @@ import { ConvertToRDF } from "../rdf/convertToRDF";
 import { Thresholds } from "../../domain/entities/thresholds";
 import { ConvertToJS } from "../rdf/convertToJS";
 import { EmailRepository } from "../repository/emailRepository";
+import { CreateMailBody } from "../notification/createMailBody";
+import { TelegramRepository } from "../repository/telegramRepository";
+import { CreateTelegramBody } from "../notification/createTelegramBody";
 
 export class HistoryDatasourceImpl extends HistoryDatasource {
   constructor(
@@ -63,12 +66,16 @@ export class HistoryDatasourceImpl extends HistoryDatasource {
     const content = ConvertToRDF.convertToRDF(history, thresholds);
 
     const emailRepository = new EmailRepository();
+    const telegramRepository = new TelegramRepository();
 
-    const body = `<h2>Los umbreales fueron superados</h2><p>Temperatura: ${history.feeds[0]?.field1}, gas: ${history.feeds[0]?.field2}</p>`;
+    const email = CreateMailBody.createMailBody("🔥Alerta de gas🔥", {temperature: Number.parseFloat(history.feeds[0]?.field1), gas: Number.parseFloat(history.feeds[0]?.field2), gasThreshold: thresholds.gas, temperatureThreshold: thresholds.temperature});
+
+    const telegram = CreateTelegramBody.createTelegramBody("🔥Alerta de gas🔥", {temperature: Number.parseFloat(history.feeds[0]?.field1), gas: Number.parseFloat(history.feeds[0]?.field2), gasThreshold: thresholds.gas, temperatureThreshold: thresholds.temperature});
 
     try {
 
-      emailRepository.sendEmail({subject: "Alert", body: body});
+      //emailRepository.sendNotification(email);
+      telegramRepository.sendNotification(telegram);
 
       const res = await axios.post(url, content, {
         headers: { "Content-Type": "text/turtle" },

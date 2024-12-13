@@ -11,7 +11,7 @@ export class ConvertToRDF {
 
     return `
         <http://example.org/history/${id}> <http://example.org/history#id> "${id}" .
-        <http://example.org/history/${id}> <http://example.org/history#date> "${new Date()}" .
+        <http://example.org/history/${id}> <http://example.org/history#date> "${new Date().toLocaleString()}" .
         <http://example.org/history/${id}> <http://example.org/history#temperature> "${
       history.feeds[0]?.field1
     }" .
