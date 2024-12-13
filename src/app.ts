@@ -4,12 +4,17 @@ import { AppRoutes } from "./presentation/out/routes";
 import { JenaDatabase } from "./data/apacheJana/apacheJanaDatabase";
 import { DataApi } from "./presentation/in/data/dataApi";
 import { Thingspeak } from "./data/thingspeak/thingspeak";
+import { CheckCreateFiles } from "./infrastructure/files/checkCreateFiles";
 
 (() => {
   main();
 })();
 
 async function main() {
+
+  //Check and create files
+  CheckCreateFiles.checkCreateFiles();
+
   //Database
   const jenaDatabase = new JenaDatabase({
     username: envs.databaseUser,

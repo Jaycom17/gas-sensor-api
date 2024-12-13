@@ -74,7 +74,7 @@ export class HistoryDatasourceImpl extends HistoryDatasource {
 
     try {
 
-      //emailRepository.sendNotification(email);
+      emailRepository.sendNotification(email);
       telegramRepository.sendNotification(telegram);
 
       const res = await axios.post(url, content, {

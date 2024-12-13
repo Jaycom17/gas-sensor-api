@@ -1,11 +1,17 @@
 import { Thingspeak } from "../../../domain/entities/thingspeakIn";
 import { Thresholds } from "../../../domain/entities/thresholds";
 import { HistoryDatasourceImpl } from "../../../infrastructure/datasource/historyDatasourceImpl";
+import { LastNotification } from "../../../infrastructure/timer/lastNotification";
 
 export class DataController {
     static getData(data: Thingspeak, thresholds: Thresholds, dataUrl:string, username: string, password: string) {
         if (!(Number.parseFloat(data.feeds[0]?.field1) > thresholds.temperature || Number.parseFloat(data.feeds[0]?.field2) > thresholds.gas)) {
             console.log("Data is not above threshold");
+            return;
+        }
+
+        if (!LastNotification.checkLastNotification(new Date())) {
+            return;
         }
 
         const historyDatasourceImpl = new HistoryDatasourceImpl(dataUrl, username, password);
