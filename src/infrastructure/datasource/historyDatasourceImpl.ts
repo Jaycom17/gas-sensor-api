@@ -85,12 +85,7 @@ export class HistoryDatasourceImpl extends HistoryDatasource {
     );
 
     try {
-      if (
-        Number.parseFloat(history.feeds[0]?.field1) > thresholds.temperature ||
-        Number.parseFloat(history.feeds[0]?.field2) > thresholds.gas
-      ) {
-        emailRepository.sendNotification(email);
-      }
+      emailRepository.sendNotification(email);
       telegramRepository.sendNotification(telegram);
 
       const res = await axios.post(url, content, {
