@@ -47,7 +47,6 @@ export class HistoryDatasourceImpl extends HistoryDatasource {
       });
 
       return ConvertToJS.convertToJS(response.data);
-
     } catch (error: Error | any) {
       console.error(
         "Error getting data:",
@@ -68,13 +67,30 @@ export class HistoryDatasourceImpl extends HistoryDatasource {
     const emailRepository = new EmailRepository();
     const telegramRepository = new TelegramRepository();
 
-    const email = CreateMailBody.createMailBody("🔥Alerta de gas🔥", {temperature: Number.parseFloat(history.feeds[0]?.field1), gas: Number.parseFloat(history.feeds[0]?.field2), gasThreshold: thresholds.gas, temperatureThreshold: thresholds.temperature});
+    const email = CreateMailBody.createMailBody("🔥Alerta de gas🔥", {
+      temperature: Number.parseFloat(history.feeds[0]?.field1),
+      gas: Number.parseFloat(history.feeds[0]?.field2),
+      gasThreshold: thresholds.gas,
+      temperatureThreshold: thresholds.temperature,
+    });
 
-    const telegram = CreateTelegramBody.createTelegramBody("🔥Alerta de gas🔥", {temperature: Number.parseFloat(history.feeds[0]?.field1), gas: Number.parseFloat(history.feeds[0]?.field2), gasThreshold: thresholds.gas, temperatureThreshold: thresholds.temperature});
+    const telegram = CreateTelegramBody.createTelegramBody(
+      "🔥Alerta de gas🔥",
+      {
+        temperature: Number.parseFloat(history.feeds[0]?.field1),
+        gas: Number.parseFloat(history.feeds[0]?.field2),
+        gasThreshold: thresholds.gas,
+        temperatureThreshold: thresholds.temperature,
+      }
+    );
 
     try {
-
-      emailRepository.sendNotification(email);
+      if (
+        Number.parseFloat(history.feeds[0]?.field1) > thresholds.temperature ||
+        Number.parseFloat(history.feeds[0]?.field2) > thresholds.gas
+      ) {
+        emailRepository.sendNotification(email);
+      }
       telegramRepository.sendNotification(telegram);
 
       const res = await axios.post(url, content, {
@@ -121,5 +137,4 @@ export class HistoryDatasourceImpl extends HistoryDatasource {
       throw CustumError.internal();
     }
   }
-
 }
