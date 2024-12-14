@@ -1,8 +1,9 @@
 import { SendNotification } from "../../domain/repositories/sendNotification";
 import { Content } from "../../domain/entities/content";
-import { resend } from "../../config/resend";
+import { transporter } from "../../config/nodemailer";
 import fs from "fs";
 import path from "path";
+import { envs } from "../../config/envs";
 
 export class EmailRepository extends SendNotification {
   setDestination(email: string): void {
@@ -24,18 +25,19 @@ export class EmailRepository extends SendNotification {
       throw new Error("Destination email not set");
     }
 
-    resend.emails
-      .send({
-        from: "Acme <onboarding@resend.dev>",
-        to: [destination],
-        subject: email.subject,
-        html: email.body,
-      })
-      .then(() => {
-        console.log("Email sent");
-      })
-      .catch((error: Error) => {
-        console.error("Error sending email:", error.message);
-      });
+    const mailOptions = {
+      from: envs.email,
+      to: destination,
+      subject: email.subject,
+      html: email.body,
+    };
+
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.log(error);
+      } else {
+        console.log('Correo enviado: ' + info.response);
+      }
+    });
   }
 }

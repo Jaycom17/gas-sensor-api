@@ -9,7 +9,8 @@ export const envs = {
     databasePassword: get('DATABASE_PASSWORD').required().asString(),
     thingsSpeakUrl: get('THINGSPEAK_URL').required().asUrlString(),
     thresholdsUrl: get('THRESHOLDS_URL').required().asUrlString(),
-    resendKey: get('RESEND_KEY').required().asString(),
     audienceId: get('AUDIENCE_ID').required().asString(),
     telegramToken: get('TELEGRAM_BOT_TOKEN').required().asString(),
+    email: get('EMAIL').required().asString(),
+    emailPassword: get('EMAIL_PASSWORD').required().asString(),
 };
